@@ -140,6 +140,25 @@
 
   </div>
 
+  <!-- Google Analytics (config.js contains the private tracking ID) -->
+  <script src="config.js"></script>
+  <script>
+    // Only load Google Analytics if config is available
+    if (window.CONFIG && window.CONFIG.GA_MEASUREMENT_ID) {
+      // Create and inject gtag script
+      var gtagScript = document.createElement('script');
+      gtagScript.async = true;
+      gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + window.CONFIG.GA_MEASUREMENT_ID;
+      document.head.appendChild(gtagScript);
+
+      // Initialize Google Analytics
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', window.CONFIG.GA_MEASUREMENT_ID);
+    }
+  </script>
+
   <script src="js/logic.js"></script>
 </body>
 </html>

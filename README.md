@@ -25,6 +25,8 @@ A minimalist brutalist-style budget tracker web application for managing your pe
 ```
 budgy/
 ├── index.html          # Main HTML structure
+├── config.example.js   # Example configuration (copy to config.js)
+├── config.js          # Your private config (gitignored)
 ├── styles/
 │   └── main.css       # Brutalist styling
 ├── js/
@@ -35,8 +37,12 @@ budgy/
 ## Getting Started
 
 1. Clone or download this repository
-2. Open `index.html` in a modern web browser
-3. Start tracking your budget!
+2. (Optional) Set up Google Analytics:
+   - Copy `config.example.js` to `config.js`
+   - Replace `G-XXXXXXXXXX` with your Google Analytics measurement ID
+   - The `config.js` file is gitignored and won't be committed
+3. Open `index.html` in a modern web browser
+4. Start tracking your budget!
 
 No build process or dependencies required.
 
