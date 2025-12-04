@@ -16,6 +16,11 @@
     const transactionsList = document.getElementById('transactions-list');
     const startingBalanceInput = document.getElementById('starting-balance-input');
     const startingBalanceDisplay = document.getElementById('starting-balance-display');
+    const startingBalanceModalDisplay = document.getElementById('starting-balance-modal-display');
+    const startingBalanceModal = document.getElementById('starting-balance-modal');
+    const editStartingBalanceBtn = document.getElementById('edit-starting-balance-btn');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cancelModalBtn = document.getElementById('cancel-modal-btn');
 
     // Load data from localStorage
     function loadData() {
@@ -46,8 +51,42 @@
 
     // Update starting balance display
     function updateStartingBalanceDisplay() {
-      startingBalanceDisplay.textContent = '$' + startingBalance.toFixed(2);
+      const formattedBalance = '$' + startingBalance.toFixed(2);
+      startingBalanceDisplay.textContent = formattedBalance;
+      startingBalanceModalDisplay.textContent = formattedBalance;
     }
+
+    // Open modal
+    function openModal() {
+      startingBalanceModal.classList.add('active');
+      startingBalanceInput.value = '';
+      startingBalanceInput.focus();
+    }
+
+    // Close modal
+    function closeModal() {
+      startingBalanceModal.classList.remove('active');
+      startingBalanceInput.value = '';
+    }
+
+    // Modal event listeners
+    editStartingBalanceBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    startingBalanceModal.addEventListener('click', (e) => {
+      if (e.target === startingBalanceModal) {
+        closeModal();
+      }
+    });
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && startingBalanceModal.classList.contains('active')) {
+        closeModal();
+      }
+    });
 
     // Calculate totals
     function calculateTotals() {
@@ -67,24 +106,21 @@
     // Update UI
     function updateUI() {
       const totals = calculateTotals();
-      
+
       // Update totals
       document.getElementById('total-income').textContent = '$' + totals.income.toFixed(2);
       document.getElementById('total-expenses').textContent = '$' + totals.expenses.toFixed(2);
-      
+
       const balanceElement = document.getElementById('total-balance');
-      const balanceIcon = document.getElementById('balance-icon');
-      
+
       balanceElement.textContent = '$' + totals.balance.toFixed(2);
-      
+
       if (totals.balance >= 0) {
-        balanceElement.className = 'card-value text-green';
-        balanceIcon.className = 'icon text-green';
+        balanceElement.className = 'balance-hero-amount text-green';
       } else {
-        balanceElement.className = 'card-value text-red';
-        balanceIcon.className = 'icon text-red';
+        balanceElement.className = 'balance-hero-amount text-red';
       }
-      
+
       // Update transactions list
       renderTransactions();
     }
@@ -149,15 +185,15 @@
     // Handle starting balance form submit
     startingBalanceForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       const value = parseFloat(startingBalanceInput.value);
-      
+
       if (value >= 0) {
         startingBalance = value;
         updateStartingBalanceDisplay();
         saveData();
         updateUI();
-        startingBalanceInput.value = '';
+        closeModal();
       }
     });
 
