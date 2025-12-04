@@ -1,6 +1,6 @@
 # BUDGY
 
-A minimalist brutalist-style budget tracker web application for managing your personal finances.
+A simple budget tracker for managing your personal finances.
 
 ## Features
 
@@ -10,8 +10,6 @@ A minimalist brutalist-style budget tracker web application for managing your pe
 - **Category Management**: Organize transactions by categories (Housing, Transportation, Food, etc.)
 - **Local Storage**: All data persists locally in your browser
 - **Edit Functionality**: Modify existing transactions
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Brutalist UI**: Clean, bold design with sharp borders and shadows
 
 ## Tech Stack
 
@@ -24,7 +22,7 @@ A minimalist brutalist-style budget tracker web application for managing your pe
 
 ```
 budgy/
-├── index.html          # Main HTML structure
+├── index.html         # Main HTML structure
 ├── styles/
 │   └── main.css       # Brutalist styling
 ├── js/
