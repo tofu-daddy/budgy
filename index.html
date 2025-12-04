@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    .title-font {
+      font-family: 'Archivo Black', sans-serif;
+    }
+    
+    /* Brutalist shadows and borders */
+    .brutal-shadow {
+      box-shadow: 4px 4px 0px #ffffff;
+    }
+    
+    .brutal-border {
+      border: 3px solid #ffffff;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #ffffff;
+      border-radius: 0;
+    }
+    
+    /* Grid noise texture */
+    .noise-bg {
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.03) 2px,
+          rgba(255, 255, 255, 0.03) 4px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.03) 2px,
+          rgba(255, 255, 255, 0.03) 4px
+        );
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    @media (min-width: 640px) {
+      .container {
+        padding: 2rem;
+      }
+    }
+    
+    /* Header */
+    .header {
+      margin-bottom: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.05em;
+    }
+    
+    @media (min-width: 640px) {
+      .header h1 {
+        font-size: 4rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .header h1 {
+        font-size: 5rem;
+      }
+    }
+    
+    .header p {
+      font-size: 0.875rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Grid layouts */
+    .grid {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    @media (min-width: 768px) {
+      .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    /* Cards */
+    .card {
+      background: #0a0a0a;
+      padding: 1.5rem;
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .card-label {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .card-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    
+    .text-green {
+      color: #10b981;
+    }
+    
+    .text-red {
+      color: #ef4444;
+    }
+    
+    /* Forms */
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0a0a0a;
+      border: 3px solid #ffffff;
+      color: #ffffff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      box-shadow: 4px 4px 0px #10b981;
+      border-color: #10b981;
+    }
+    
+    input::placeholder {
+      color: #666666;
+    }
+    
+    select {
+      cursor: pointer;
+    }
+    
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      padding-top: 0.5rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: 'IBM Plex Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: #10b981;
+      border: 3px solid #10b981;
+      color: #0a0a0a;
+    }
+    
+    .btn-primary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #ffffff;
+    }
+    
+    .btn-danger {
+      background: #ef4444;
+      border: 3px solid #ef4444;
+      color: #ffffff;
+    }
+    
+    .btn-danger:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #ffffff;
+    }
+    
+    .btn-secondary {
+      background: #0a0a0a;
+      border: 3px solid #ffffff;
+      color: #ffffff;
+    }
+    
+    .btn-secondary:hover {
+      background: #1a1a1a;
+    }
+    
+    .btn-small {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+    
+    /* Transaction list */
+    .transaction-item {
+      border: 3px solid #ffffff;
+      background: #0a0a0a;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: background 0.2s;
+    }
+    
+    .transaction-item:hover {
+      background: #1a1a1a;
+    }
+    
+    .transaction-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    @media (min-width: 640px) {
+      .transaction-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    
+    .transaction-left {
+      flex: 1;
+    }
+    
+    .transaction-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .category-pill {
+      background: #1a1a1a;
+      border: 2px solid #ffffff;
+      padding: 2px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .category-pill.income {
+      background: #10b981;
+      border-color: #10b981;
+      color: #0a0a0a;
+    }
+    
+    .transaction-description {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .transaction-date {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    
+    .transaction-amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .transaction-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7280;
+    }
+    
+    .empty-state p:first-child {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .empty-state p:last-child {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    
+    .icon-small {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Starting balance section */
+    .starting-balance-section {
+      margin-bottom: 2rem;
+    }
+    
+    .starting-balance-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .starting-balance-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #10b981;
+    }
+  </style>
+</head>
+<body class="noise-bg">
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title-font">BUDGET TRACKER</h1>
+    </div>
+
+    <!-- Starting Balance Section -->
+    <div class="card brutal-border brutal-shadow starting-balance-section">
+      <h2 class="title-font form-title">STARTING BALANCE</h2>
+      <div class="starting-balance-display">
+        <span class="card-label">Current Starting Balance</span>
+        <span class="starting-balance-value" id="starting-balance-display">$0.00</span>
+      </div>
+      <form id="starting-balance-form">
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Amount</label>
+            <input type="number" step="0.01" id="starting-balance-input" placeholder="0.00" required>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">
+            <span>Set Starting Balance</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Balance Cards -->
+    <div class="grid grid-3">
+      <div class="card brutal-border brutal-shadow">
+        <div class="card-header">
+          <span class="card-label">Income</span>
+          <svg class="icon text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <div class="card-value text-green" id="total-income">$0.00</div>
+      </div>
+
+      <div class="card brutal-border brutal-shadow">
+        <div class="card-header">
+          <span class="card-label">Expenses</span>
+          <svg class="icon text-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+          </svg>
+        </div>
+        <div class="card-value text-red" id="total-expenses">$0.00</div>
+      </div>
+
+      <div class="card brutal-border brutal-shadow">
+        <div class="card-header">
+          <span class="card-label">Balance</span>
+          <svg class="icon" id="balance-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="card-value" id="total-balance">$0.00</div>
+      </div>
+    </div>
+
+    <!-- Add Transaction Form -->
+    <div class="card brutal-border brutal-shadow form-section">
+      <h2 class="title-font form-title" id="form-title">ADD TRANSACTION</h2>
+      
+      <form id="transaction-form">
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <input type="text" id="description" placeholder="e.g., Rent payment" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Amount</label>
+            <input type="number" step="0.01" id="amount" placeholder="0.00" required>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select id="type">
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="category">
+              <option value="Housing">Housing</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Food">Food</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Insurance">Insurance</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Savings">Savings</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Personal">Personal</option>
+              <option value="Debt">Debt</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary" id="submit-btn">
+            <span>Add</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancel-btn" style="display: none;">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="card brutal-border brutal-shadow">
+      <h2 class="title-font form-title">TRANSACTIONS</h2>
+      <div id="transactions-list"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Data stored locally in your browser</p>
+    </div>
+
+  </div>
+
+  <script>
+    // State
+    let transactions = [];
+    let editingId = null;
+    let startingBalance = 0;
+
+    // DOM Elements
+    const transactionForm = document.getElementById('transaction-form');
+    const startingBalanceForm = document.getElementById('starting-balance-form');
+    const descriptionInput = document.getElementById('description');
+    const amountInput = document.getElementById('amount');
+    const typeSelect = document.getElementById('type');
+    const categorySelect = document.getElementById('category');
+    const submitBtn = document.getElementById('submit-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const formTitle = document.getElementById('form-title');
+    const transactionsList = document.getElementById('transactions-list');
+    const startingBalanceInput = document.getElementById('starting-balance-input');
+    const startingBalanceDisplay = document.getElementById('starting-balance-display');
+
+    // Load data from localStorage
+    function loadData() {
+      const savedTransactions = localStorage.getItem('budgetTransactions');
+      const savedStartingBalance = localStorage.getItem('budgetStartingBalance');
+      
+      if (savedTransactions) {
+        try {
+          transactions = JSON.parse(savedTransactions);
+        } catch (e) {
+          console.error('Failed to load transactions');
+        }
+      }
+      
+      if (savedStartingBalance) {
+        startingBalance = parseFloat(savedStartingBalance);
+      }
+      
+      updateStartingBalanceDisplay();
+      updateUI();
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem('budgetTransactions', JSON.stringify(transactions));
+      localStorage.setItem('budgetStartingBalance', startingBalance.toString());
+    }
+
+    // Update starting balance display
+    function updateStartingBalanceDisplay() {
+      startingBalanceDisplay.textContent = '$' + startingBalance.toFixed(2);
+    }
+
+    // Calculate totals
+    function calculateTotals() {
+      const income = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
+      
+      const expenses = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+      
+      const balance = startingBalance + income - expenses;
+      
+      return { income, expenses, balance };
+    }
+
+    // Update UI
+    function updateUI() {
+      const totals = calculateTotals();
+      
+      // Update totals
+      document.getElementById('total-income').textContent = '$' + totals.income.toFixed(2);
+      document.getElementById('total-expenses').textContent = '$' + totals.expenses.toFixed(2);
+      
+      const balanceElement = document.getElementById('total-balance');
+      const balanceIcon = document.getElementById('balance-icon');
+      
+      balanceElement.textContent = '$' + totals.balance.toFixed(2);
+      
+      if (totals.balance >= 0) {
+        balanceElement.className = 'card-value text-green';
+        balanceIcon.className = 'icon text-green';
+      } else {
+        balanceElement.className = 'card-value text-red';
+        balanceIcon.className = 'icon text-red';
+      }
+      
+      // Update transactions list
+      renderTransactions();
+    }
+
+    // Render transactions
+    function renderTransactions() {
+      if (transactions.length === 0) {
+        transactionsList.innerHTML = `
+          <div class="empty-state">
+            <p>No transactions yet</p>
+            <p>Add your first transaction above</p>
+          </div>
+        `;
+        return;
+      }
+
+      transactionsList.innerHTML = transactions.map(transaction => `
+        <div class="transaction-item">
+          <div class="transaction-content">
+            <div class="transaction-left">
+              <div>
+                <span class="category-pill">${transaction.category}</span>
+                ${transaction.type === 'income' ? '<span class="category-pill income">INCOME</span>' : ''}
+              </div>
+              <p class="transaction-description">${transaction.description}</p>
+              <p class="transaction-date">${formatDate(transaction.date)}</p>
+            </div>
+            
+            <div class="transaction-right">
+              <div class="transaction-amount ${transaction.type === 'income' ? 'text-green' : 'text-red'}">
+                ${transaction.type === 'income' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+              </div>
+              
+              <div class="transaction-actions">
+                <button class="btn btn-secondary btn-small" onclick="editTransaction(${transaction.id})">
+                  Edit
+                </button>
+                <button class="btn btn-danger btn-small" onclick="deleteTransaction(${transaction.id})">
+                  <svg class="icon icon-small" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Handle starting balance form submit
+    startingBalanceForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const value = parseFloat(startingBalanceInput.value);
+      
+      if (value >= 0) {
+        startingBalance = value;
+        updateStartingBalanceDisplay();
+        saveData();
+        updateUI();
+        startingBalanceInput.value = '';
+      }
+    });
+
+    // Handle transaction form submit
+    transactionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const description = descriptionInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+      const type = typeSelect.value;
+      const category = categorySelect.value;
+      
+      if (!description || amount <= 0) {
+        return;
+      }
+
+      const transaction = {
+        id: editingId || Date.now(),
+        description,
+        amount,
+        type,
+        category,
+        date: new Date().toISOString()
+      };
+
+      if (editingId) {
+        const index = transactions.findIndex(t => t.id === editingId);
+        transactions[index] = transaction;
+        editingId = null;
+        formTitle.textContent = 'ADD TRANSACTION';
+        submitBtn.querySelector('span').textContent = 'Add';
+        cancelBtn.style.display = 'none';
+      } else {
+        transactions.unshift(transaction);
+      }
+
+      // Reset form
+      descriptionInput.value = '';
+      amountInput.value = '';
+      typeSelect.value = 'expense';
+      categorySelect.value = 'Other';
+
+      saveData();
+      updateUI();
+    });
+
+    // Edit transaction
+    window.editTransaction = (id) => {
+      const transaction = transactions.find(t => t.id === id);
+      
+      if (transaction) {
+        descriptionInput.value = transaction.description;
+        amountInput.value = transaction.amount;
+        typeSelect.value = transaction.type;
+        categorySelect.value = transaction.category;
+        editingId = id;
+        
+        formTitle.textContent = 'EDIT TRANSACTION';
+        submitBtn.querySelector('span').textContent = 'Update';
+        cancelBtn.style.display = 'inline-flex';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    // Delete transaction
+    window.deleteTransaction = (id) => {
+      transactions = transactions.filter(t => t.id !== id);
+      saveData();
+      updateUI();
+    };
+
+    // Cancel edit
+    cancelBtn.addEventListener('click', () => {
+      editingId = null;
+      descriptionInput.value = '';
+      amountInput.value = '';
+      typeSelect.value = 'expense';
+      categorySelect.value = 'Other';
+      
+      formTitle.textContent = 'ADD TRANSACTION';
+      submitBtn.querySelector('span').textContent = 'Add';
+      cancelBtn.style.display = 'none';
+    });
+
+    // Initialize
+    loadData();
+  </script>
+</body>
+</html>
