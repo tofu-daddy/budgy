@@ -82,27 +82,6 @@ Click the trash icon on any transaction to remove it permanently.
 - Debt
 - Other
 
-## Design Philosophy
-
-BUDGY embraces a brutalist design aesthetic characterized by:
-
-- Bold, high-contrast black and white color scheme
-- Sharp borders and geometric shadows
-- Monospace typography (IBM Plex Mono)
-- Grid-based noise texture background
-- No rounded corners or gradients
-- Functional, straightforward UI elements
-
-## Browser Compatibility
-
-Works on all modern browsers that support:
-- ES6 JavaScript
-- CSS Grid
-- LocalStorage API
-- Flexbox
-
-Recommended browsers: Chrome, Firefox, Safari, Edge (latest versions)
-
 ## Data Privacy
 
 All data is stored locally in your browser's localStorage. No data is sent to any server or third party.
