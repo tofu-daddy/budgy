@@ -363,6 +363,9 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+    .footer a {
+        color: #10b981;
+    }
     
     .icon {
       width: 20px;
