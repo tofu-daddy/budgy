@@ -35,7 +35,7 @@ budgy/
 ## Getting Started
 
 1. Clone or download this repository
-2. Open `index.html` in a modern web browser
+2. Open `index.html`
 3. Start tracking your budget!
 
 No build process or dependencies required.
