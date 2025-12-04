@@ -1,2 +1,2 @@
-# Google Analytics configuration (contains private tracking ID)
-config.js
+# If you want to use a different GA ID locally, uncomment this:
+# config.js
