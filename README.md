@@ -1,6 +1,6 @@
 # BUDGY
 
-A minimalist brutalist-style budget tracker web application for managing your personal finances.
+A simple budget tracker for managing your personal finances.
 
 ## Features
 
@@ -10,8 +10,6 @@ A minimalist brutalist-style budget tracker web application for managing your pe
 - **Category Management**: Organize transactions by categories (Housing, Transportation, Food, etc.)
 - **Local Storage**: All data persists locally in your browser
 - **Edit Functionality**: Modify existing transactions
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Brutalist UI**: Clean, bold design with sharp borders and shadows
 
 ## Tech Stack
 
@@ -24,8 +22,8 @@ A minimalist brutalist-style budget tracker web application for managing your pe
 
 ```
 budgy/
-├── index.html          # Main HTML structure
-├── config.example.js   # Example configuration (copy to config.js)
+├── index.html         # Main HTML structure
+├── config.example.js  # Example configuration (copy to config.js)
 ├── config.js          # Your private config (gitignored)
 ├── styles/
 │   └── main.css       # Brutalist styling
@@ -41,7 +39,7 @@ budgy/
    - Copy `config.example.js` to `config.js`
    - Replace `G-XXXXXXXXXX` with your Google Analytics measurement ID
    - The `config.js` file is gitignored and won't be committed
-3. Open `index.html` in a modern web browser
+3. Open `index.html`
 4. Start tracking your budget!
 
 No build process or dependencies required.
